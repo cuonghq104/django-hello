@@ -1,8 +1,16 @@
 from rest_framework import serializers
-from api.models import Product, Order, OrderItem
+from api.models import Product, Order, OrderItem, ProductCategory
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductCategory
+        fields = '__all__'
+
+
+class ProductSerializerWithCategoryAsObject(serializers.ModelSerializer):
+    category = ProductCategorySerializer(many=False)
+
     class Meta:
         model = Product
         fields = (
@@ -10,7 +18,22 @@ class ProductSerializer(serializers.ModelSerializer):
             'name',
             'description',
             'price',
-            'stock'
+            'stock',
+            'category'
+        )
+
+
+class ProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = (
+            'id',
+            'name',
+            'description',
+            'price',
+            'stock',
+            'category'
         )
 
     def validate_price(self, value):
@@ -54,6 +77,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'order_items',
             'total_price'
         )
+
 
 class ProductInfoSerializer(serializers.Serializer):
     products = ProductSerializer(many=True)

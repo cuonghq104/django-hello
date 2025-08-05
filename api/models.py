@@ -6,6 +6,13 @@ import uuid
 class User(AbstractUser):
     pass
 
+class ProductCategory(models.Model):
+    name = models.CharField(max_length=256)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
 
 class Product(models.Model):
     name = models.CharField(max_length=256)
@@ -13,6 +20,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.PositiveIntegerField()
     image = models.ImageField(upload_to='products/', blank=True, null=True)
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products', null=True)
 
     @property
     def in_stock(self):
@@ -36,6 +44,7 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.order_id} by {self.user.username}"
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
