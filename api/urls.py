@@ -1,13 +1,17 @@
 from django.urls import path
 from . import views
+from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
-    path('categories/', views.ProductCategoryCreateListApiView.as_view()),
-    path('categories/<int:category_id>', views.ProductCategoryRetrieveUpdateDestroyAPIView.as_view()),
-    path('categories/<int:category_id>/products', views.ProductByCategoryAPIView.as_view()),
+    path('categories/', views.ProductSuperCategoryCreateListApiView.as_view()),
+    path('categories/<int:category_id>', views.ProductSuperCategoryRetrieveUpdateDestroyAPIView.as_view()),
+    path('categories/child', views.ProductCategoryCreateListApiView.as_view()),
+    path('categories/child/<int:category_id>', views.ProductCategoryRetrieveUpdateDestroyAPIView.as_view()),
     path('products/', views.ProductListCreateApiView.as_view()),
     path('products/info', views.ProductInfoApiView.as_view()),
     path('products/<int:product_id>', views.ProductDetailApiView.as_view()),
-    path('orders/', views.OrderListApiView.as_view()),
-    path('user-orders/', views.UserOrderListApiView.as_view(), name='user-orders'),
 ]
+
+router = DefaultRouter()
+router.register('orders', views.OrderViewSet)
+urlpatterns += router.urls
