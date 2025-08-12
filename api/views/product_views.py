@@ -1,4 +1,6 @@
 from django.db.models import Max
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
@@ -23,7 +25,12 @@ class ProductListCreateApiView(generics.ListCreateAPIView):
     pagination_class.page_size_query_param = 'page_size'
     pagination_class.page_query_param = 'page_num'
 
+    @method_decorator(cache_page(60 * 15, key_prefix='product_list'))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     permission_classes = [AllowAny]
+
     def get_permissions(self):
         self.permission_classes = [AllowAny]
         if self.request.method == 'POST':
@@ -39,17 +46,17 @@ class ProductListCreateApiView(generics.ListCreateAPIView):
         # Get query parameters
         super_category = self.request.query_params.get('super_category')
         category = self.request.query_params.get('category')
-        
+
         # If both super_category and category are provided, ignore category
         if super_category and category:
             # Create a copy of query params and remove category
             query_params = self.request.query_params.copy()
             query_params.pop('category', None)
-            
+
             # Apply filters manually with modified query params
             filterset = self.filterset_class(query_params, queryset=queryset)
             return filterset.qs
-        
+
         # Otherwise, use the default filtering
         return super().filter_queryset(queryset)
 
