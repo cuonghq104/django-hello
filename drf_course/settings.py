@@ -127,14 +127,15 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '2/m',
-        'user': '3/m'
-    }
+    'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler',
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'rest_framework.throttling.AnonRateThrottle',
+    #     'rest_framework.throttling.UserRateThrottle'
+    # ],
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon': '2/m',
+    #     'user': '3/m'
+    # }
 }
 
 SPECTACULAR_SETTINGS = {
@@ -154,3 +155,10 @@ SPECTACULAR_SETTINGS = {
 #         }
 #     }
 # }
+
+AUTH_CUSTOM_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.core.validators.MinLengthValidator',
+        'OPTIONS': {'limit_value': 8}
+    }
+]

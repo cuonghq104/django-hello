@@ -15,4 +15,6 @@ __all__ = [
     'OrderItemSerializer',
     'OrderSerializer',
     'UserSerializer',
+    'UserRegisterSerializer',
+    'UserLoginSerializer'
 ] 

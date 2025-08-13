@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from .categories import ProductCategory
 
@@ -9,6 +11,7 @@ class Product(models.Model):
     stock = models.PositiveIntegerField()
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products', null=True)
+    discount_percentage = models.SmallIntegerField(default=0)
 
     @property
     def in_stock(self):
@@ -16,3 +19,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def current_price(self):
+        return self.price * (Decimal(100 - self.discount_percentage) / Decimal(100))

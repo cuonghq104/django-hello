@@ -6,12 +6,24 @@ from unfold.admin import ModelAdmin
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
+    extra = 1  # Show one empty form by default
+    fields = ['product', 'quantity', 'price']
+    readonly_fields = ['price']  # Make price read-only since it's calculated
 
 
 class OrderAdmin(ModelAdmin):
     inlines = [
         OrderItemInline
     ]
+    exclude = ['total_price']
+    readonly_fields = ['order_id', 'created_at']
+    
+    def save_formset(self, request, form, formset, change):
+        """Override to ensure OrderItems are saved properly"""
+        instances = formset.save(commit=False)
+        for instance in instances:
+            instance.save()
+        formset.save_m2m()
 
 class ProductAdmin(ModelAdmin):
     list_display = ['id', 'name', 'price', 'category', 'stock', 'in_stock']
@@ -35,8 +47,11 @@ class ProductSuperCategoryAdmin(ModelAdmin):
         ProductCategoryInline
     ]
 
+class UserAdmin(ModelAdmin):
+    model = User
+
 admin.site.register(Order, OrderAdmin)
-admin.site.register(User)
+admin.site.register(User, UserAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductSuperCategory, ProductSuperCategoryAdmin)
 admin.site.register(ProductCategory, ProductCategoryAdmin)
