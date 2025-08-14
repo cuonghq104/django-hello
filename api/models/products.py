@@ -12,6 +12,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products', null=True)
     discount_percentage = models.SmallIntegerField(default=0)
+    store = models.ForeignKey('Store', on_delete=models.CASCADE, related_name='products', null=True)
 
     @property
     def in_stock(self):

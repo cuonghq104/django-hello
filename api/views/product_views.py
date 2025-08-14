@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 
 from api.filters import ProductFilter, ProductInStockFilter
 from api.models import Product
+from api.paginations.product_paginations import CustomProductPagination
 from api.serializers import ProductSerializer, ProductSerializerWithCategoryAsObject, ProductInfoSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -19,11 +20,7 @@ class ProductListCreateApiView(generics.ListCreateAPIView):
     filterset_class = ProductFilter
     filter_backends = [DjangoFilterBackend, ProductInStockFilter]
 
-    pagination_class = PageNumberPagination
-    pagination_class.page_size = 5
-    pagination_class.max_page_size = 6
-    pagination_class.page_size_query_param = 'page_size'
-    pagination_class.page_query_param = 'page_num'
+    pagination_class = CustomProductPagination
 
     @method_decorator(cache_page(60 * 15, key_prefix='product_list'))
     def list(self, request, *args, **kwargs):

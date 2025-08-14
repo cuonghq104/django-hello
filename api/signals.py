@@ -5,8 +5,8 @@ from django.dispatch import receiver
 from api.models import Product
 
 
-@receiver([post_save, post_delete], sender=Product)
-def invalidate_product_cache(sender, instance, **kwargs):
-    print("Clearing product cache")
-
-    cache.delete_pattern('*product_list*')
+# @receiver([post_save, post_delete], sender=Product)
+# def invalidate_product_cache(sender, instance, **kwargs):
+#     print("Clearing product cache")
+#
+#     cache.delete_pattern('*product_list*')

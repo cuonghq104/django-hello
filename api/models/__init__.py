@@ -3,6 +3,8 @@ from .products import *
 from .categories import *
 from .orders import *
 from .users import *
+from .stores import *
+
 # This allows you to still use:
 # from api.models import Product, Order, User
 # Instead of:
@@ -16,4 +18,5 @@ __all__ = [
     'Order',
     'OrderItem',
     'User',
-] 
+    'Store'
+]

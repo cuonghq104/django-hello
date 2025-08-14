@@ -29,7 +29,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return super().perform_create(serializer)
 
     def get_permissions(self):
-        if self.action == 'register':
+        if self.action == 'register' or self.action == 'login':
             self.permission_classes = []
         return super().get_permissions()
 
@@ -53,7 +53,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def login(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
-
+        print(email, password)
         try:
             user = User.objects.get(email=email)
             if user.check_password(password):

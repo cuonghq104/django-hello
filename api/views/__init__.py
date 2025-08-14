@@ -17,6 +17,10 @@ from .category_views import (
 from .user_views import (
     UserViewSet,
 )
+
+from .store_views import (
+    StoreViewSet
+)
 # This allows you to still use:
 # from api.views import ProductListCreateApiView
 # Instead of:
@@ -32,4 +36,5 @@ __all__ = [
     'ProductSuperCategoryCreateListApiView',
     'ProductSuperCategoryRetrieveUpdateDestroyAPIView',
     'UserViewSet',
+    'StoreViewSet'
 ]

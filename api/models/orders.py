@@ -41,7 +41,4 @@ class OrderItem(models.Model):
         return f"Product {self.product.name} with quantity {self.quantity}"
 
     def save(self, *args, **kwargs):
-        # Set price to product's current price if not already set
-        if not self.price:
-            self.price = self.product.current_price
-        super().save(*args, **kwargs)
+        self.price = self.product.current_price()

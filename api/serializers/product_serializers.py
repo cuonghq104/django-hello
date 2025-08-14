@@ -3,6 +3,7 @@ from decimal import Decimal
 from rest_framework import serializers
 
 from api.models import Product
+from .store_serializers import StoreSimpleSerializer
 from .category_serializers import ProductCategorySerializer
 
 
@@ -14,7 +15,7 @@ class ProductSerializerRoot(serializers.ModelSerializer):
 
 class ProductSerializerWithCategoryAsObject(ProductSerializerRoot):
     category = ProductCategorySerializer(many=False)
-
+    store = StoreSimpleSerializer(many=False)
     class Meta:
         model = Product
         fields = (
@@ -25,7 +26,8 @@ class ProductSerializerWithCategoryAsObject(ProductSerializerRoot):
             'stock',
             'category',
             'discount_percentage',
-            'discount_price'
+            'discount_price',
+            'store'
         )
 
 
@@ -40,7 +42,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'stock',
             'category'
             'discount_percentage',
-            'discount_price'
+            'discount_price',
         )
 
     def validate_price(self, value):
