@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import Order, OrderItem, User, Product, ProductCategory, ProductSuperCategory, Store
+from api.models import Order, OrderItem, User, Product, ProductCategory, ProductSuperCategory, Store, StoreStaff
 from unfold.admin import ModelAdmin
 
 
@@ -42,10 +42,18 @@ class ProductSuperCategoryAdmin(ModelAdmin):
     ]
 
 
+class StoreUserInline(admin.TabularInline):
+    model = StoreStaff
+
+
 class StoreAdmin(ModelAdmin):
     list_display = ['id', 'name', 'location']
     search_fields = ['name']
     list_per_page = 20
+    inlines = [
+        StoreUserInline
+    ]
+
 
 class UserAdmin(ModelAdmin):
     model = User

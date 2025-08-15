@@ -18,5 +18,6 @@ __all__ = [
     'Order',
     'OrderItem',
     'User',
-    'Store'
+    'Store',
+    'StoreStaff'
 ]

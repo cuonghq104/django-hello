@@ -8,7 +8,7 @@ from .category_serializers import ProductCategorySerializer
 
 
 class ProductSerializerRoot(serializers.ModelSerializer):
-    discount_price = serializers.SerializerMethodField()
+    discount_price = serializers.SerializerMethodField(read_only=True)
     def get_discount_price(self, obj):
         return obj.price * (Decimal(100 - obj.discount_percentage) / Decimal(100))
 
@@ -31,7 +31,7 @@ class ProductSerializerWithCategoryAsObject(ProductSerializerRoot):
         )
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializer(ProductSerializerRoot):
     class Meta:
         model = Product
         fields = (
@@ -40,7 +40,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'description',
             'price',
             'stock',
-            'category'
+            'category',
             'discount_percentage',
             'discount_price',
         )

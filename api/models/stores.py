@@ -1,5 +1,8 @@
 from django.db import models
 
+from api.models import User
+
+
 class Store(models.Model):
     class LocationChoice(models.TextChoices):
         HA_NOI = "HN",
@@ -44,3 +47,16 @@ class Store(models.Model):
 
     def __str__(self):
         return self.name
+
+class StoreStaff(models.Model):
+    class RoleChoice(models.TextChoices):
+        OWNER = "1",  "Owner",
+        EMPLOYER = "2", "Employee",
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='managed_stores')
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='staff_users')
+    role = models.CharField(choices=RoleChoice.choices, default=RoleChoice.OWNER, max_length=1)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ('user', 'store')

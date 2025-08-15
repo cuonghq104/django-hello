@@ -1,7 +1,9 @@
+from django.contrib.auth.models import AnonymousUser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.models import User
@@ -30,8 +32,14 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'register' or self.action == 'login':
-            self.permission_classes = []
+            self.permission_classes = [AllowAny]
         return super().get_permissions()
+
+    def get_authentication_classes(self):
+        if self.action == 'login':
+            # Skip JWT authentication for login to avoid token validation errors
+            return [SessionAuthentication]
+        return super().get_authentication_classes()
 
     @action(detail=False, methods=['post'], url_path='register', url_name='register')
     def register(self, request):
