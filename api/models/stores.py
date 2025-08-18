@@ -60,3 +60,6 @@ class StoreStaff(models.Model):
 
     class Meta:
         unique_together = ('user', 'store')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"

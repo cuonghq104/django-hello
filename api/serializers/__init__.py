@@ -20,5 +20,6 @@ __all__ = [
     'UserRegisterSerializer',
     'UserLoginSerializer',
     'StoreSerializer',
-    'StoreSimpleSerializer'
+    'StoreSimpleSerializer',
+    'StoreProductBulkCreateSerializer'
 ] 

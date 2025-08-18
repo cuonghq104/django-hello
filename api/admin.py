@@ -1,11 +1,12 @@
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin, TabularInline
+
 from api.models import Order, OrderItem, User, Product, ProductCategory, ProductSuperCategory, Store, StoreStaff
-from unfold.admin import ModelAdmin
 
 
 # Register your models here.
 
-class OrderItemInline(admin.TabularInline):
+class OrderItemInline(TabularInline):
     model = OrderItem
 
 
@@ -29,7 +30,7 @@ class ProductCategoryAdmin(ModelAdmin):
     list_per_page = 20
 
 
-class ProductCategoryInline(admin.TabularInline):
+class ProductCategoryInline(TabularInline):
     model = ProductCategory
 
 
@@ -42,7 +43,7 @@ class ProductSuperCategoryAdmin(ModelAdmin):
     ]
 
 
-class StoreUserInline(admin.TabularInline):
+class StoreUserInline(TabularInline):
     model = StoreStaff
 
 

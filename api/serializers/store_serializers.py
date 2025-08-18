@@ -1,9 +1,10 @@
 from django.db import transaction
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_serializer, OpenApiExample
 
 from api.models import Store, StoreStaff, User
 from .base_serializers import BaseSerializer
-
+import os
 
 class StoreSimpleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,6 +27,15 @@ class StoreSerializer(serializers.ModelSerializer):
     # stores = Store.objects.annotate(products_count=Count('products'))
     # This will perform the count in a single SQL query instead of N+1 queries
 
+
+class StoreStaffLoginSerializer(serializers.ModelSerializer):
+    store = StoreSimpleSerializer(read_only=True)
+    class Meta:
+        model = StoreStaff
+        fields = (
+            'store',
+            'role'
+        )
 
 class StoreStaffCreateSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
@@ -69,3 +79,34 @@ class StoreCreateSerializer(BaseSerializer):
                         print(current_user)
                         StoreStaff.objects.create(store=store, user=current_user, role="1")
         return store
+
+
+@extend_schema_serializer(
+    examples=[
+        OpenApiExample(
+            'Valid Request',
+            value={
+                'id': 1,
+                'file': 'file.csv'
+            },
+            request_only=True,
+            media_type='multipart/form-data'
+        )
+    ]
+)
+class StoreProductBulkCreateSerializer(serializers.Serializer):
+    id = serializers.IntegerField(
+        help_text="Store ID where products will be created",
+        min_value=1
+    )
+    file = serializers.FileField(
+        help_text="File to upload (CSV, Excel, etc.)",
+        allow_empty_file=False,
+        use_url=False
+    )
+
+    def validate_file(self, file):
+        ext = os.path.splitext(file.name)[1].lower()
+        if ext != ".csv":
+            raise serializers.ValidationError("Only CSV files are allowed.")
+        return file
